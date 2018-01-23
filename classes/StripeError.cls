@@ -3,4 +3,5 @@ global class StripeError {
 	global String param;
 	global String message;
 	global String code;
+	
 }

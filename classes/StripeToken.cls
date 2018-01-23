@@ -33,7 +33,7 @@ global class StripeToken {
 			}
 		} else {
 			hs.setBody(StripeTokenTests.testData_getToken);
-			hs.setStatusCode(200);
+			hs.setStatusCode(StripeTokenTests.test_statusCode);
 		}
 
 		system.debug('#### '+ hs.getBody());
@@ -42,10 +42,14 @@ global class StripeToken {
 		statusCode = hs.getStatusCode();
 		system.debug('$$statusCode = '+hs.getStatusCode());
 		
-		try {
-			StripeToken o = StripeToken.parse(response);
-			return o;
-		} catch (System.JSONException e) {
+		if (statusCode == 200) {
+			try {
+				StripeToken o = StripeToken.parse(response);
+				return o;
+			} catch (System.JSONException e) {
+				return null;
+			}
+		} else {
 			return null;
 		}
 	}

@@ -1,17 +1,26 @@
 global class StripeSubscription {
-	global String status; // 'trialing', 'active', 'past_due', 'canceled', or 'unpaid'
+	global String status;
 	global Integer start;
-	global StripePlan plan;
-	global String customer_id;
-	global Integer quantity;
-	global Boolean cancel_at_period_end;
 	global Integer current_period_start;
+	global Plan plan;
 	global Integer current_period_end;
-	global Integer ended_at; 
-	global Integer trial_start; 
-	global Integer trial_end;
-	global Integer canceled_at;
+	global String customer_id;
 	global StripeError error;
+	global SubscriptionPeriod period;
+
+	global class SubscriptionPeriod {
+		global Integer start;
+		global Integer endDate;
+	}
+
+	global class Plan {
+		global String stripeCurrency;
+		global String interval;
+		global Boolean livemode;
+		global String name;
+		global String id;
+		global Integer amount;
+	}
 
 	public static StripeSubscription parse(String json) {
 		// rough string replacement to simplify json parsing and avoid Apex reserved words

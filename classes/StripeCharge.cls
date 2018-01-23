@@ -64,7 +64,7 @@ global class StripeCharge {
 			}
 		} else {
 			hs.setBody(StripeChargeTests.testData_getCharge);
-			hs.setStatusCode(200);
+			hs.setStatusCode(test_statusCode);
 		}
 
 		system.debug('#### '+ hs.getBody());
@@ -82,28 +82,14 @@ global class StripeCharge {
 	}
 	
 	global static StripeCharge create(String customerId, Decimal amount) {
-		return create(customerId, amount, new Map<String, String>(), new Map<String, String>());
+		return StripeCharge.create(customerId, amount, null);
 	}
 	
-	// DEPRECATED
 	global static StripeCharge create(String customerId, Decimal amount, String description) {
-		Map<String, String> properties = new Map<String, String>{
-			'description' => description
-		};
-		
-		return create(customerId, amount, properties, null);
+		return StripeCharge.create(customerId, amount, null, null);
 	}
 
-	// DEPRECATED
 	global static StripeCharge create(String customerId, Decimal amount, String description, Map<String, String> metadata) {
-		Map<String, String> properties = new Map<String, String>{
-			'description' => description
-		};
-		
-		return create(customerId, amount, properties, metadata);
-	}
-
-	global static StripeCharge create(String customerId, Decimal amount, Map<String, String> properties, Map<String, String> metadata) {
 		HttpRequest http = new HttpRequest();
 		http.setEndpoint(SERVICE_URL);
 		http.setMethod('POST');
@@ -115,30 +101,19 @@ global class StripeCharge {
 		Integer amount_int = Math.round(amount * 100);//.intValue();
 		Map<String, String> payload = new Map<String, String>{
 			'customer' => customerId,
-			'amount' => String.valueOf(amount_int)
+			'amount' => String.valueOf(amount_int),
+			'currency' => 'usd'
 		};
-
-		// set the default currency to USD if it's not specified
-		if (properties == null || properties.containsKey('usd') == false) {
-			payload.put('currency', 'usd');
-		}
-
-		if (properties != null) {
-			for (String key : properties.keySet()) {
-				if (properties.get(key) != null) {
-					payload.put(key, properties.get(key));
-				}
-			}
-		}
 
 		if (metadata != null) {
 			for (String key : metadata.keySet()) {
-				if (metadata.get(key) != null) {
-					payload.put('metadata['+key+']', metadata.get(key));
-				}
+				payload.put('metadata['+key+']', metadata.get(key));
 			}
 		}
 
+		if (description != null) {
+			payload.put('description', description);
+		}
 		http.setBody(StripeUtil.urlify(payload));
 		System.debug(System.LoggingLevel.INFO, '\n**** REQUEST BODY:\n'+http.getBody()); 	
 		
@@ -155,7 +130,7 @@ global class StripeCharge {
 			}
 		} else {
 			hs.setBody(StripeChargeTests.testData_createCharge);
-			hs.setStatusCode(200);
+			hs.setStatusCode(test_statusCode);
 		}
 
 		system.debug('#### '+ hs.getBody());
@@ -180,4 +155,6 @@ global class StripeCharge {
 
 		return (StripeCharge) System.JSON.deserialize(json, StripeCharge.class);
 	}
+	
+	private static Integer test_StatusCode = 200;
 }
