@@ -97,8 +97,8 @@ global virtual class StripeWebhookListener {
 		} catch (WebhookDelayedProcessor.WebhookDelayedProcessorException e) {
 			Stripe_Webhook__c webhook = new Stripe_Webhook__c(
 				Webhook_Data__c = RestContext.request.requestBody.toString(),
-				Webhook_Type__c = event.stripeType,
-				Event_ID__c = event.id
+				Webhook_Type__c = event.stripeType
+				// , Event_ID__c = event.id
 			);
 
 			insert webhook;
