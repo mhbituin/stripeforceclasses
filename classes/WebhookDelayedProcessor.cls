@@ -16,7 +16,7 @@ global class WebhookDelayedProcessor implements Database.Batchable<sObject> {
 			StripeEvent event = StripeEvent.parse(webhook.Webhook_Data__c);
 			if (webhook.Webhook_Type__c == 'charge.succeeded') {
 				StripeCharge charge = event.stripeData.StripeCharge;
-				WebhookListener listener = new WebhookListener(); // this should be the name of your LOCAL listener; not StripeWebhookListener
+				StripeWebhookListener listener = new StripeWebhookListener(); // this should be the name of your LOCAL listener; not StripeWebhookListener
 				
 				try {
 					listener.handle_ChargeSucceeded(charge, false);
@@ -28,7 +28,8 @@ global class WebhookDelayedProcessor implements Database.Batchable<sObject> {
 					reschedule = true;
 				} catch (System.Exception e) {
 					webhook.Status__c = 'Failed';
-					webhook.Error_Message__c = e.getMessage();
+					// webhook.Error_Message__c = e.getMessage();
+					System.debug( e.getMessage() );
 				}
 			}
 		}
