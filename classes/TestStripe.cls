@@ -43,8 +43,8 @@ public class TestStripe {
   public static void StripeDataSetup() {
 		Stripe_Settings__c s = new Stripe_Settings__c();
 			s.Is_Live_Environment__c = true;
-			s.Stripe_Live_Key__c = 'xyz';
-			s.Stripe_Test_Key__c = '123';
+			s.Stripe_Secret_Live_Key__c = 'xyz';
+			s.Stripe_Secret_Test_Key__c = '123';
 			s.Stripe_Secret_Live_Key__c = 'xyz';
 			s.Stripe_Secret_Test_Key__c = '123';
 			s.Stripe_Publishable_Test_Key__c = 'def';
